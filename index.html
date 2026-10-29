@@ -103,15 +103,18 @@
 <section class="mission"><div class="container"><div class="mission-card"><div><span class="section-label">Not another homework app</span><h2>We don't just want students to <span class="gradient-text">know what to do.</span><br>We want to help them do it.</h2><p>L8tely is about building confidence, independence, and follow-through — while giving parents the visibility they wish school platforms already made easy.</p></div><div class="mission-tag-list"><div class="mission-tag"><span>👀</span> More clarity for parents</div><div class="mission-tag"><span>🚀</span> More ownership for students</div><div class="mission-tag"><span>🎉</span> More moments worth celebrating</div></div></div></div></section>
 <section class="pilot" id="pilot"><div class="container pilot-grid">
  <div><span class="section-label">Be here at the beginning</span><h2 class="section-title">The future of<br>school-day peace of mind <span style="color:#ffa8df">starts with families like yours.</span></h2><p>We're preparing a small, hands-on L8tely pilot with parents and students who want a better way to manage the school week. Interested? Tell us a little about your family.</p><div class="pilot-points"><div class="pilot-point"><span>✓</span> Get updates about pilot availability</div><div class="pilot-point"><span>✓</span> Share what your family needs most</div><div class="pilot-point"><span>✓</span> Help shape a tool built for real life</div></div><div class="contact-line">Questions? Email the L8tely team at <a href="mailto:info@l8tely.com" style="color:#fff;font-weight:800;text-decoration:underline;text-underline-offset:3px">info@l8tely.com</a></div></div>
- <form class="pilot-form" id="pilot-form" action="https://formsubmit.co/info@l8tely.com" method="POST"><h3>Count me interested! ✨</h3><p>Share a few details and send your pilot interest directly to the L8tely team. No account needed.</p>
-  <input type="hidden" name="_subject" value="New L8tely pilot family interest">
-  <input type="hidden" name="_template" value="table">
-  <div style="position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden" aria-hidden="true"><label for="pilothoney">Leave this field blank</label><input id="pilothoney" type="text" name="_honey" tabindex="-1" autocomplete="off"></div>
+ <form class="pilot-form" id="pilot-form" action="https://api.web3forms.com/submit" method="POST"><h3>Count me interested! ✨</h3><p>Share a few details and send your pilot interest directly to the L8tely team. No account needed.</p>
+  <input type="hidden" name="access_key" value="eb792109-9a17-47d1-af36-bb0a19874836">
+  <input type="hidden" name="subject" value="New L8tely pilot family interest">
+  <input type="hidden" name="from_name" value="L8tely pilot interest">
+  <input type="hidden" name="redirect" value="https://web3forms.com/success">
+  <div style="position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden" aria-hidden="true"><label for="pilothoney">Leave this field blank</label><input id="pilothoney" type="checkbox" name="botcheck" tabindex="-1" autocomplete="off"></div>
   <div class="form-grid"><div class="field"><label for="parent-name">Your name *</label><input id="parent-name" name="Parent / guardian" autocomplete="name" placeholder="Parent or guardian" maxlength="100" required></div><div class="field"><label for="parent-email">Your email *</label><input id="parent-email" name="email" type="email" autocomplete="email" placeholder="you@example.com" maxlength="254" required></div></div>
   <div class="field"><label for="grade">Student's grade <span style="font-weight:500;color:#8493a9">(optional)</span></label><select id="grade" name="Student grade"><option value="">Choose a grade</option><option>6th grade</option><option>7th grade</option><option>8th grade</option><option>9th grade</option><option>10th grade</option><option>11th grade</option><option>12th grade</option></select></div>
   <div class="field"><label for="challenge">What's your family's biggest schoolwork headache? <span style="font-weight:500;color:#8493a9">(optional)</span></label><textarea id="challenge" name="Biggest schoolwork challenge" maxlength="1200" placeholder="Missing assignments? Keeping track of due dates? Getting started? …"></textarea></div>
   <button class="button-form" type="submit">Send my pilot interest <span aria-hidden="true">↗</span></button>
-  <div class="form-foot">Your submission will be sent to the L8tely team at info@l8tely.com through FormSubmit, our form-processing service. We may email you about the pilot. Please don't include student names, passwords, or sensitive school records.</div>
+  <div id="form-status" class="form-status" role="status" aria-live="polite" tabindex="-1"></div>
+  <div class="form-foot">Your submission will be sent to the L8tely team at info@l8tely.com through Web3Forms, our form-processing service. We may email you about the pilot. Please don't include student names, passwords, or sensitive school records.</div>
  </form>
  </div></section>
 <section class="section faq" id="questions"><div class="container faq-wrap"><div class="section-top"><span class="section-label">The important stuff</span><h2 class="section-title">Questions? <span class="gradient-text">We've got answers.</span></h2></div>
@@ -133,6 +136,48 @@
  tabs.forEach((tab,i)=>{tab.addEventListener('click',()=>{tabs.forEach((t,j)=>{t.setAttribute('aria-selected',String(i===j));t.tabIndex=i===j?0:-1;panels[j].hidden=i!==j})});tab.addEventListener('keydown',e=>{if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.preventDefault();const n=(i+(e.key==='ArrowRight'?1:-1)+2)%2;tabs[n].click();tabs[n].focus()}})});tabs[1].tabIndex=-1;
  document.querySelectorAll('.accordion').forEach(item=>{const btn=item.querySelector('button'),panel=item.querySelector('.answer');btn.addEventListener('click',()=>{let open=btn.getAttribute('aria-expanded')==='true';btn.setAttribute('aria-expanded',String(!open));panel.style.maxHeight=open?'0px':panel.scrollHeight+'px'})});
  document.getElementById('year').textContent=new Date().getFullYear();
+
+ const pilotForm=document.getElementById('pilot-form');
+ const formStatus=document.getElementById('form-status');
+ const submitButton=pilotForm.querySelector('button[type="submit"]');
+ let submitting=false;
+ pilotForm.addEventListener('submit',async event=>{
+  event.preventDefault();
+  if(submitting)return;
+  submitting=true;
+  const buttonContent=submitButton.innerHTML;
+  submitButton.disabled=true;
+  submitButton.textContent='Sending…';
+  pilotForm.setAttribute('aria-busy','true');
+  formStatus.classList.add('show');
+  formStatus.textContent='Sending your pilot interest…';
+  formStatus.style.background='';
+  formStatus.style.color='';
+  const controller=new AbortController();
+  const timeout=setTimeout(()=>controller.abort(),20000);
+  try{
+   const payload=Object.fromEntries(new FormData(pilotForm));
+   delete payload.redirect;
+   const response=await fetch(pilotForm.action,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(payload),signal:controller.signal});
+   const result=await response.json();
+   if(!response.ok||result.success!==true)throw new Error('Submission was not accepted');
+   formStatus.textContent="Thank you! Your pilot interest has been submitted to the L8tely team. We'll be in touch about pilot availability.";
+   formStatus.style.background='#eafff5';
+   formStatus.style.color='#087453';
+   pilotForm.reset();
+  }catch(error){
+   formStatus.textContent="We couldn't confirm your submission. Your details are still here. Please try again, or contact info@l8tely.com.";
+   formStatus.style.background='#fff0f4';
+   formStatus.style.color='#a22d51';
+  }finally{
+   clearTimeout(timeout);
+   submitting=false;
+   submitButton.disabled=false;
+   submitButton.innerHTML=buttonContent;
+   pilotForm.removeAttribute('aria-busy');
+   formStatus.focus({preventScroll:true});
+  }
+ });
 
 })();
 </script>
